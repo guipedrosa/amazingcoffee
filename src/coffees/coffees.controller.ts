@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
@@ -12,7 +12,7 @@ export class CoffesController {
     @Get()
     async findAll(@Query() paginationQueryDTO: PaginationQueryDto) {
         //const { limit, offset } = paginationQuery;
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        //await new Promise(resolve => setTimeout(resolve, 5000));
         return this.coffeesService.findAll(paginationQueryDTO);
     }
 
