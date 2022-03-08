@@ -5,6 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Flavor } from './entities/flavor.entity';
 import { Coffee } from './entities/coffee.entity';
 import { NotFoundException } from '@nestjs/common';
+import { CoffeeRatingService } from '../coffee-rating/coffee-rating.service';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
@@ -20,6 +21,7 @@ describe('CoffeesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CoffeesService,
+        CoffeeRatingService,
         { provide: Connection, useValue: {} },
         {
           provide: getRepositoryToken(Flavor),
@@ -34,7 +36,7 @@ describe('CoffeesService', () => {
 
     service = module.get<CoffeesService>(CoffeesService);
     coffeeRepository = module.get<MockRepository>(getRepositoryToken(Coffee));
-  });
+  }, 20000);
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -52,18 +54,18 @@ describe('CoffeesService', () => {
       });
     });
     describe('otherwise', () => {
-      it('should throw the "NotFoundException"', async (done) => {
+      it('should throw the "NotFoundException"', async () => {
         const coffeeId = '1';
         coffeeRepository.findOne.mockReturnValue(undefined);
 
         try {
           await service.findOne(coffeeId);
-          // done();
+         
         } catch (err) {
           expect(err).toBeInstanceOf(NotFoundException);
           expect(err.message).toEqual(`Coffee #${coffeeId} not found`);
         }
-      });
+      }, 20000);
     });
   });
 });
